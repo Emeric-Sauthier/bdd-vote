@@ -18,7 +18,7 @@ namespace VoteTests.Features
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Reqnroll", "3.0.0.0")]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute()]
-    public partial class CalculatorFeature
+    public partial class CandidatesFeature
     {
         
         private global::Reqnroll.ITestRunner testRunner;
@@ -27,9 +27,9 @@ namespace VoteTests.Features
         
         private static string[] featureTags = ((string[])(null));
         
-        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Features", "Calculator", "Simple calculator for adding two numbers", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
+        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Features", "Candidates", "Scenario to test the affectation of candidates", global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
         
-#line 1 "Calculator.feature"
+#line 1 "Candidate.feature"
 #line hidden
         
         public virtual Microsoft.VisualStudio.TestTools.UnitTesting.TestContext TestContext
@@ -117,20 +117,20 @@ namespace VoteTests.Features
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/Calculator.feature.ndjson", 3);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/Candidate.feature.ndjson", 3);
         }
         
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute("Add two numbers")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Add two numbers")]
-        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Calculator")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute("Affect candidates to the vote")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Affect candidates to the vote")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Candidates")]
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("mytag")]
-        public async global::System.Threading.Tasks.Task AddTwoNumbers()
+        public async global::System.Threading.Tasks.Task AffectCandidatesToTheVote()
         {
             string[] tagsOfScenario = new string[] {
                     "mytag"};
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "0";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Add two numbers", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Affect candidates to the vote", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
 #line 6
@@ -143,17 +143,30 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
             else
             {
                 await this.ScenarioStartAsync();
+                global::Reqnroll.Table table1 = new global::Reqnroll.Table(new string[] {
+                            "Candidates"});
+                table1.AddRow(new string[] {
+                            "Candidate1"});
+                table1.AddRow(new string[] {
+                            "Candidate2"});
+                table1.AddRow(new string[] {
+                            "Candidate3"});
 #line 7
- await testRunner.GivenAsync("the first number is 50", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+ await testRunner.GivenAsync("candidates are", ((string)(null)), table1, "Given ");
 #line hidden
-#line 8
- await testRunner.AndAsync("the second number is 70", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line 12
+ await testRunner.WhenAsync("add the candidates to the vote", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 9
- await testRunner.WhenAsync("the two numbers are added", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
-#line hidden
-#line 10
- await testRunner.ThenAsync("the result should be 120", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+                global::Reqnroll.Table table2 = new global::Reqnroll.Table(new string[] {
+                            "Candidates"});
+                table2.AddRow(new string[] {
+                            "Candidate1"});
+                table2.AddRow(new string[] {
+                            "Candidate2"});
+                table2.AddRow(new string[] {
+                            "Candidate3"});
+#line 13
+ await testRunner.ThenAsync("candidates should be", ((string)(null)), table2, "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();

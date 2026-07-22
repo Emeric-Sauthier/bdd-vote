@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using VoteLibrairy;
 
 namespace VoteTests.StepDefinitions
@@ -9,9 +10,7 @@ namespace VoteTests.StepDefinitions
         private List<string> _candidates = new();
         private Dictionary<VoteRound, Dictionary<string, uint>> _results = new();
         private Dictionary<VoteRound, string?> _roundWinner = new();
-        private Dictionary<VoteRound, string?> _expectedWinners = new();
-
-        #region Candidates
+        private Exception? _exception;
 
         [Given("candidates are")]
         public void GivenTheCandidates(Table table)
@@ -23,28 +22,12 @@ namespace VoteTests.StepDefinitions
             }
         }
 
-        [When("add the candidates to the vote")]
-        public void WhenAddTheCandidates()
-        {
-            _vote.AddCandidates(_candidates);
-        }
-
-        [Then("candidates should be")]
-        public void ThenCandidatesShouldBe(Table table)
-        {
-            CollectionAssert.AreEquivalent(_candidates, _vote.Candidates[_vote.Round]);
-        }
-
-        #endregion
-
-        #region Vote states & results
-
         [Given("first round results are")]
         public void GivenFirstRoundResultsAre(Table table)
         {
             _results[VoteRound.First] = new();
 
-            foreach(DataTableRow row in table.Rows)
+            foreach (DataTableRow row in table.Rows)
             {
                 string candidateName = row[0];
                 uint voteNumber = uint.Parse(row[1]);
@@ -65,6 +48,68 @@ namespace VoteTests.StepDefinitions
             }
         }
 
+        [When("add the candidates to the vote")]
+        public void WhenAddTheCandidates()
+        {
+            try
+            {
+                _vote.AddCandidates(_candidates);
+            }
+            catch (Exception ex)
+            {
+                _exception = ex;
+            }
+        }
+
+        [When("open vote")]
+        public void WhenOpenVote()
+        {
+            try
+            {
+                _vote.StartVote();
+            }
+            catch (Exception ex)
+            {
+                _exception = ex;
+            }
+        }
+
+        [When("close vote")]
+        public void WhenCloseVote()
+        {
+            try
+            {
+                _vote.CloseVote();
+            }
+            catch (Exception ex)
+            {
+
+                _exception = ex;
+            }
+        }
+
+        [When("set round results")]
+        public void WhenSetRoundResults()
+        {
+            foreach (string key in _results[_vote.Round].Keys)
+            {
+                _vote.AddVotes(key, _results[_vote.Round][key]);
+            }
+        }
+
+        [When("get round winner")]
+        public void WhenGetRoundWinner()
+        {
+            try
+            {
+                _vote.GetRoundWinner();
+            }
+            catch (Exception ex)
+            {
+                _exception = ex;
+            }
+        }
+
         [When("process current round")]
         public void WhenProcessCurrentRound()
         {
@@ -77,7 +122,13 @@ namespace VoteTests.StepDefinitions
 
             _vote.CloseVote();
 
-            _roundWinner[_vote.Round] = _vote.GetVoteWinner();
+            _roundWinner[_vote.Round] = _vote.GetRoundWinner();
+        }
+
+        [Then("candidates should be")]
+        public void ThenCandidatesShouldBe(Table table)
+        {
+            CollectionAssert.AreEquivalent(_candidates, _vote.Candidates[_vote.Round]);
         }
 
         [Then("first round results should be")]
@@ -128,6 +179,11 @@ namespace VoteTests.StepDefinitions
             Assert.AreEqual(expectedWinner, _roundWinner[VoteRound.Second]);
         }
 
-        #endregion
+        [Then("should throw an error with message (.*)")]
+        public void ThenShouldThrowAnError(string message)
+        {
+            Assert.IsNotNull(_exception);
+            Assert.AreEqual(message, _exception.Message);
+        }
     }
 }

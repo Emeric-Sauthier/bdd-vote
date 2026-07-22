@@ -36,11 +36,11 @@ namespace VoteLibrairy
             Round = VoteRound.First;
         }
 
-        public string? GetVoteWinner()
+        public string? GetRoundWinner()
         {
             if (State != VoteState.Closed)
             {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException($"Unable to get the round winner, vote is '{State.ToString()}'.");
             }
 
             IOrderedEnumerable<ResultRecord> orderedResults = Results[Round].OrderByDescending(r => r.VotePercentage);
@@ -66,14 +66,19 @@ namespace VoteLibrairy
 
         public void AddCandidate(string candidate)
         {
+            if (State != VoteState.InComing)
+            {
+                throw new InvalidOperationException($"Unable to add candidate to vote, the vote is '{State.ToString()}'.");
+            }
+
             if (!Candidates.ContainsKey(Round))
             {
                 Candidates[Round] = new();
             }
 
-            if (Candidates[Round].Contains(candidate) || State != VoteState.InComing)
+            if (Candidates[Round].Contains(candidate))
             {
-                throw new Exception();
+                throw new Exception($"Unable to add '{candidate}', duplicated.");
             }
 
             Candidates[Round].Add(candidate);
@@ -81,29 +86,28 @@ namespace VoteLibrairy
 
         public void AddCandidates(List<string> candidates)
         {
-            if (!Candidates.ContainsKey(Round))
+            foreach (string candidate in candidates)
             {
-                Candidates[Round] = new();
+                AddCandidate(candidate);
             }
-            
-            Candidates[Round].AddRange(candidates);
         }
 
         public void AddVotes(string candidate, uint voteNumber)
         {
             if (State != VoteState.Opened)
             {
-                throw new Exception();
-            } else if (!Results.ContainsKey(Round))
+                throw new Exception($"Unable to add vote result, the vote is '{State.ToString()}'.");
+            }
+            else if (!Results.ContainsKey(Round))
             {
-                throw new Exception();
+                throw new Exception($"Unable to add result for {Round.ToString()}. No results found for the round.");
             }
             
             var c = Results[Round].FirstOrDefault(c => c.CandidateName == candidate, null);
             
             if (c is null)
             {
-                throw new Exception();
+                throw new Exception($"Unable to add result for '{candidate}'. Not found.");
             }
 
             c.VoteNumber += voteNumber;
@@ -114,7 +118,11 @@ namespace VoteLibrairy
         {
             if (State != VoteState.InComing)
             {
-                throw new Exception();
+                throw new Exception($"Unable to start vote, the vote is '{State.ToString()}'.");
+            }
+            if (!Candidates.ContainsKey(Round) || Candidates[Round].Count == 0)
+            {
+                throw new Exception("Unable to start vote, no candidates assigned.");
             }
 
             State = VoteState.Opened;
@@ -128,7 +136,7 @@ namespace VoteLibrairy
         {
             if (State != VoteState.Opened)
             {
-                throw new Exception();
+                throw new Exception($"Unable to close the vote, the vote is '{State}'.");
             }
 
             State = VoteState.Closed;

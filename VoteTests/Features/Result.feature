@@ -82,3 +82,73 @@ Scenario: Second round without winner
 	| Candidate1 |          30 |              50 |
 	| Candidate3 |          30 |              50 |
 	And second round winner should be null
+
+Scenario: Cannot get winner (InComing)
+	When get round winner
+	Then should throw an error with message Unable to get the round winner, vote is 'InComing'.
+
+Scenario: Cannot get winner (Opened)
+	Given candidates are
+	| Candidates |
+	| Candidate1 |
+	| Candidate2 |
+	| Candidate3 |
+	When add the candidates to the vote
+	And open vote
+	And get round winner
+	Then should throw an error with message Unable to get the round winner, vote is 'Opened'.
+
+Scenario: Cannot start vote (No candidates)
+	When open vote
+	Then should throw an error with message Unable to start vote, no candidates assigned.
+
+Scenario: Cannot start vote (Opened)
+	Given candidates are
+	| Candidates |
+	| Candidate1 |
+	| Candidate2 |
+	| Candidate3 |
+	When add the candidates to the vote
+	And open vote
+	And open vote
+	Then should throw an error with message Unable to start vote, the vote is 'Opened'.
+
+Scenario: Cannot start vote (Closed)
+	Given candidates are
+	| Candidates |
+	| Candidate1 |
+	| Candidate2 |
+	| Candidate3 |
+	And first round results are
+	| Candidates | Vote Number |
+	| Candidate1 |          50 |
+	| Candidate2 |          20 |
+	| Candidate3 |          30 |
+	When add the candidates to the vote
+	And open vote
+	And set round results
+	And close vote
+	And open vote
+	Then should throw an error with message Unable to start vote, the vote is 'Closed'.
+
+Scenario: Cannot close vote (InComing)
+	When close vote
+	Then should throw an error with message Unable to close the vote, the vote is 'InComing'.
+
+Scenario: Cannot close vote (Closed)
+	Given candidates are
+	| Candidates |
+	| Candidate1 |
+	| Candidate2 |
+	| Candidate3 |
+	And first round results are
+	| Candidates | Vote Number |
+	| Candidate1 |          50 |
+	| Candidate2 |          20 |
+	| Candidate3 |          30 |
+	When add the candidates to the vote
+	And open vote
+	And set round results
+	And close vote
+	And close vote
+	Then should throw an error with message Unable to close the vote, the vote is 'Closed'.

@@ -15,3 +15,11 @@ Scenario: Affect candidates to the vote
 	| Candidate1 |
 	| Candidate2 |
 	| Candidate3 |
+
+Scenario: Cannot affect the same candidate two times
+	Given candidates are
+	| Candidates |
+	| Candidate1 |
+	| Candidate1 |
+	When add the candidates to the vote
+	Then should throw an error with message Unable to add 'Candidate1', duplicated.

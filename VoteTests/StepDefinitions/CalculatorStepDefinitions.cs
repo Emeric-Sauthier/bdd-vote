@@ -65,21 +65,6 @@ namespace VoteTests.StepDefinitions
             }
         }
 
-        [When("open vote")]
-        public void WhenOpenVote()
-        {
-            _vote.StartVote();
-        }
-
-        [When("add round results to vote")]
-        public void WhenAddRoundResults()
-        {
-            foreach (string key in _results[_vote.Round].Keys)
-            {
-                _vote.AddVotes(key, _results[_vote.Round][key]);
-            }
-        }
-
         [When("process current round")]
         public void WhenProcessCurrentRound()
         {

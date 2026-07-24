@@ -4,7 +4,7 @@ using VoteLibrairy;
 namespace VoteTests.StepDefinitions
 {
     [Binding]
-    public sealed class CalculatorStepDefinitions
+    public sealed class VoteStepDefinitions
     {
         private readonly Vote _vote = new Vote("Test Vote", "This vote has been created for testing.");
         private List<string> _candidates = new();

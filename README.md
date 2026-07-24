@@ -25,3 +25,12 @@ Pour ouvrir un vote et lancer un tour, il faut :
 
 ### Cas n°6 - Clotûre d'un vote
 Pour clotûrer un vote, il faut que le vote soit en cours (Opened).
+
+### Cas n°7 - Égalité au 1er tour (2e / 3e candidat)
+Le 2e tour ne compte que **2 candidats**. Si plusieurs candidats sont à égalité de voix pour la 2e place qualificative, on départage par l'âge : le **doyen** (date de naissance la plus ancienne) est qualifié.
+
+### Cas n°8 - Vote blanc
+Les votes blancs sont comptabilisés et affichés, mais ne peuvent pas gagner. Ils sont **exclus du calcul de la majorité** : le seuil de 50% et les pourcentages des candidats sont calculés sur les suffrages exprimés (total hors blancs).
+
+## Modèle
+Un candidat est représenté par la classe `Candidate` (nom + date de naissance). La date de naissance sert uniquement au départage des égalités (voir Cas n°7).

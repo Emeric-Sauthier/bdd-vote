@@ -117,7 +117,7 @@ namespace VoteTests.Features
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/Result.feature.ndjson", 12);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/Result.feature.ndjson", 15);
         }
         
         [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute("First round win")]
@@ -751,6 +751,233 @@ this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line 154
  await testRunner.ThenAsync("should throw an error with message Unable to close the vote, the vote is \'Closed\'" +
                         ".", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute("Cannot start a third round")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Cannot start a third round")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Result")]
+        public async global::System.Threading.Tasks.Task CannotStartAThirdRound()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "10";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Cannot start a third round", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 156
+this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+                global::Reqnroll.Table table23 = new global::Reqnroll.Table(new string[] {
+                            "Candidates"});
+                table23.AddRow(new string[] {
+                            "Candidate1"});
+                table23.AddRow(new string[] {
+                            "Candidate2"});
+                table23.AddRow(new string[] {
+                            "Candidate3"});
+#line 157
+ await testRunner.GivenAsync("candidates are", ((string)(null)), table23, "Given ");
+#line hidden
+                global::Reqnroll.Table table24 = new global::Reqnroll.Table(new string[] {
+                            "Candidates",
+                            "Vote Number"});
+                table24.AddRow(new string[] {
+                            "Candidate1",
+                            "50"});
+                table24.AddRow(new string[] {
+                            "Candidate2",
+                            "20"});
+                table24.AddRow(new string[] {
+                            "Candidate3",
+                            "30"});
+#line 162
+ await testRunner.AndAsync("first round results are", ((string)(null)), table24, "And ");
+#line hidden
+                global::Reqnroll.Table table25 = new global::Reqnroll.Table(new string[] {
+                            "Candidates",
+                            "Vote Number"});
+                table25.AddRow(new string[] {
+                            "Candidate1",
+                            "60"});
+                table25.AddRow(new string[] {
+                            "Candidate3",
+                            "40"});
+#line 167
+ await testRunner.AndAsync("second round results are", ((string)(null)), table25, "And ");
+#line hidden
+#line 171
+ await testRunner.WhenAsync("add the candidates to the vote", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 172
+ await testRunner.AndAsync("process current round", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 173
+ await testRunner.AndAsync("process current round", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 174
+ await testRunner.AndAsync("open vote", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 175
+ await testRunner.ThenAsync("should throw an error with message Unable to start vote, the vote is \'Closed\'.", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute("Tie for the second place is settled by age (oldest candidate qualifies)")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Tie for the second place is settled by age (oldest candidate qualifies)")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Result")]
+        public async global::System.Threading.Tasks.Task TieForTheSecondPlaceIsSettledByAgeOldestCandidateQualifies()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "11";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Tie for the second place is settled by age (oldest candidate qualifies)", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 177
+this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+                global::Reqnroll.Table table26 = new global::Reqnroll.Table(new string[] {
+                            "Candidates",
+                            "Date of birth"});
+                table26.AddRow(new string[] {
+                            "Candidate1",
+                            "1970-01-01"});
+                table26.AddRow(new string[] {
+                            "Candidate2",
+                            "1990-06-15"});
+                table26.AddRow(new string[] {
+                            "Candidate3",
+                            "1965-03-20"});
+#line 178
+ await testRunner.GivenAsync("candidates are", ((string)(null)), table26, "Given ");
+#line hidden
+                global::Reqnroll.Table table27 = new global::Reqnroll.Table(new string[] {
+                            "Candidates",
+                            "Vote Number"});
+                table27.AddRow(new string[] {
+                            "Candidate1",
+                            "40"});
+                table27.AddRow(new string[] {
+                            "Candidate2",
+                            "30"});
+                table27.AddRow(new string[] {
+                            "Candidate3",
+                            "30"});
+#line 183
+ await testRunner.AndAsync("first round results are", ((string)(null)), table27, "And ");
+#line hidden
+#line 188
+ await testRunner.WhenAsync("add the candidates to the vote", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 189
+ await testRunner.AndAsync("process current round", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 190
+ await testRunner.ThenAsync("first round winner should be null", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+                global::Reqnroll.Table table28 = new global::Reqnroll.Table(new string[] {
+                            "Candidates"});
+                table28.AddRow(new string[] {
+                            "Candidate1"});
+                table28.AddRow(new string[] {
+                            "Candidate3"});
+#line 191
+ await testRunner.AndAsync("second round candidates should be", ((string)(null)), table28, "And ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute("Blank votes are counted but excluded from the majority")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Blank votes are counted but excluded from the majority")]
+        [global::Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Result")]
+        public async global::System.Threading.Tasks.Task BlankVotesAreCountedButExcludedFromTheMajority()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "12";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Blank votes are counted but excluded from the majority", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 196
+this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+                global::Reqnroll.Table table29 = new global::Reqnroll.Table(new string[] {
+                            "Candidates"});
+                table29.AddRow(new string[] {
+                            "Candidate1"});
+                table29.AddRow(new string[] {
+                            "Candidate2"});
+#line 197
+ await testRunner.GivenAsync("candidates are", ((string)(null)), table29, "Given ");
+#line hidden
+                global::Reqnroll.Table table30 = new global::Reqnroll.Table(new string[] {
+                            "Candidates",
+                            "Vote Number"});
+                table30.AddRow(new string[] {
+                            "Candidate1",
+                            "45"});
+                table30.AddRow(new string[] {
+                            "Candidate2",
+                            "35"});
+#line 201
+ await testRunner.AndAsync("first round results are", ((string)(null)), table30, "And ");
+#line hidden
+#line 205
+ await testRunner.AndAsync("first round blank votes are 20", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 206
+ await testRunner.WhenAsync("add the candidates to the vote", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 207
+ await testRunner.AndAsync("process current round", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+                global::Reqnroll.Table table31 = new global::Reqnroll.Table(new string[] {
+                            "Candidates",
+                            "Vote Number",
+                            "Vote Percentage"});
+                table31.AddRow(new string[] {
+                            "Candidate1",
+                            "45",
+                            "56"});
+                table31.AddRow(new string[] {
+                            "Candidate2",
+                            "35",
+                            "43"});
+#line 208
+ await testRunner.ThenAsync("first round results should be", ((string)(null)), table31, "Then ");
+#line hidden
+#line 212
+ await testRunner.AndAsync("first round blank votes should be 20", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 213
+ await testRunner.AndAsync("first round winner should be Candidate1", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();

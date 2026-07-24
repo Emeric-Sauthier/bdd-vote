@@ -152,3 +152,62 @@ Scenario: Cannot close vote (Closed)
 	And close vote
 	And close vote
 	Then should throw an error with message Unable to close the vote, the vote is 'Closed'.
+
+Scenario: Cannot start a third round
+	Given candidates are
+	| Candidates |
+	| Candidate1 |
+	| Candidate2 |
+	| Candidate3 |
+	And first round results are
+	| Candidates | Vote Number |
+	| Candidate1 |          50 |
+	| Candidate2 |          20 |
+	| Candidate3 |          30 |
+	And second round results are
+	| Candidates | Vote Number |
+	| Candidate1 |          60 |
+	| Candidate3 |          40 |
+	When add the candidates to the vote
+	And process current round
+	And process current round
+	And open vote
+	Then should throw an error with message Unable to start vote, the vote is 'Closed'.
+
+Scenario: Tie for the second place is settled by age (oldest candidate qualifies)
+	Given candidates are
+	| Candidates | Date of birth |
+	| Candidate1 |    1970-01-01 |
+	| Candidate2 |    1990-06-15 |
+	| Candidate3 |    1965-03-20 |
+	And first round results are
+	| Candidates | Vote Number |
+	| Candidate1 |          40 |
+	| Candidate2 |          30 |
+	| Candidate3 |          30 |
+	When add the candidates to the vote
+	And process current round
+	Then first round winner should be null
+	And second round candidates should be
+	| Candidates |
+	| Candidate1 |
+	| Candidate3 |
+
+Scenario: Blank votes are counted but excluded from the majority
+	Given candidates are
+	| Candidates |
+	| Candidate1 |
+	| Candidate2 |
+	And first round results are
+	| Candidates | Vote Number |
+	| Candidate1 |          45 |
+	| Candidate2 |          35 |
+	And first round blank votes are 20
+	When add the candidates to the vote
+	And process current round
+	Then first round results should be
+	| Candidates | Vote Number | Vote Percentage |
+	| Candidate1 |          45 |              56 |
+	| Candidate2 |          35 |              43 |
+	And first round blank votes should be 20
+	And first round winner should be Candidate1

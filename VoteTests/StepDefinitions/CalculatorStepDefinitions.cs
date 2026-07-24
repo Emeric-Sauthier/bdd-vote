@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Linq.Expressions;
 using VoteLibrairy;
 
@@ -7,18 +8,25 @@ namespace VoteTests.StepDefinitions
     public sealed class VoteStepDefinitions
     {
         private readonly Vote _vote = new Vote("Test Vote", "This vote has been created for testing.");
-        private List<string> _candidates = new();
+        private List<Candidate> _candidates = new();
         private Dictionary<VoteRound, Dictionary<string, uint>> _results = new();
+        private Dictionary<VoteRound, uint> _blankVotes = new();
         private Dictionary<VoteRound, string?> _roundWinner = new();
         private Exception? _exception;
 
         [Given("candidates are")]
         public void GivenTheCandidates(Table table)
         {
+            bool hasDob = table.Header.Contains("Date of birth");
+
             foreach (DataTableRow row in table.Rows)
             {
-                string value = row[0];
-                _candidates.Add(value);
+                string name = row[0];
+                DateOnly dob = hasDob
+                    ? DateOnly.ParseExact(row[1], "yyyy-MM-dd", CultureInfo.InvariantCulture)
+                    : default;
+
+                _candidates.Add(new Candidate(name, dob));
             }
         }
 
@@ -46,6 +54,12 @@ namespace VoteTests.StepDefinitions
                 uint voteNumber = uint.Parse(row[1]);
                 _results[VoteRound.Second].Add(candidateName, voteNumber);
             }
+        }
+
+        [Given("first round blank votes are (.*)")]
+        public void GivenFirstRoundBlankVotesAre(uint blankVotes)
+        {
+            _blankVotes[VoteRound.First] = blankVotes;
         }
 
         [When("add the candidates to the vote")]
@@ -120,6 +134,11 @@ namespace VoteTests.StepDefinitions
                 _vote.AddVotes(key, _results[_vote.Round][key]);
             }
 
+            if (_blankVotes.TryGetValue(_vote.Round, out uint blanks))
+            {
+                _vote.AddBlankVotes(blanks);
+            }
+
             _vote.CloseVote();
 
             _roundWinner[_vote.Round] = _vote.GetRoundWinner();
@@ -129,6 +148,26 @@ namespace VoteTests.StepDefinitions
         public void ThenCandidatesShouldBe(Table table)
         {
             CollectionAssert.AreEquivalent(_candidates, _vote.Candidates[_vote.Round]);
+        }
+
+        [Then("second round candidates should be")]
+        public void ThenSecondRoundCandidatesShouldBe(Table table)
+        {
+            List<string> expectedNames = new();
+            foreach (DataTableRow row in table.Rows)
+            {
+                expectedNames.Add(row[0]);
+            }
+
+            List<Candidate> expected = _candidates.Where(c => expectedNames.Contains(c.Name)).ToList();
+
+            CollectionAssert.AreEquivalent(expected, _vote.Candidates[VoteRound.Second]);
+        }
+
+        [Then("first round blank votes should be (.*)")]
+        public void ThenFirstRoundBlankVotesShouldBe(uint blankVotes)
+        {
+            Assert.AreEqual(blankVotes, _vote.BlankVotes[VoteRound.First]);
         }
 
         [Then("first round results should be")]

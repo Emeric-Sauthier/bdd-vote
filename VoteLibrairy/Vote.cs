@@ -12,13 +12,15 @@ namespace VoteLibrairy
 
         // Candidates of the vote session (per round): key = Round, value = List of candidates
 
-        public Dictionary<VoteRound, List<string>> Candidates { get; private set; }
+        public Dictionary<VoteRound, List<Candidate>> Candidates { get; private set; }
 
         // Round of the vote
         public VoteRound Round { get; private set; }
 
         // Total number of votes
         public Dictionary<VoteRound, uint> TotalVotes { get; private set; }
+
+        public Dictionary<VoteRound, uint> BlankVotes { get; private set; }
 
         // Result of the vote session (per round): key = Round, value = List of results
         public Dictionary<VoteRound, List<ResultRecord>> Results { get; private set; }
@@ -33,6 +35,7 @@ namespace VoteLibrairy
             Candidates = new();
             Results = new();
             TotalVotes = new();
+            BlankVotes = new();
             Round = VoteRound.First;
         }
 
@@ -43,8 +46,12 @@ namespace VoteLibrairy
                 throw new InvalidOperationException($"Unable to get the round winner, vote is '{State.ToString()}'.");
             }
 
-            IOrderedEnumerable<ResultRecord> orderedResults = Results[Round].OrderByDescending(r => r.VotePercentage);
-            
+            Dictionary<string, Candidate> candidatesByName = Candidates[Round].ToDictionary(c => c.Name);
+
+            IOrderedEnumerable<ResultRecord> orderedResults = Results[Round]
+                .OrderByDescending(r => r.VoteNumber)
+                .ThenBy(r => candidatesByName[r.CandidateName].DateOfBirth);
+
             ResultRecord bestResult = orderedResults.First();
             ResultRecord secondBestResult = orderedResults.Skip(1).First();
             bool equality = bestResult.VotePercentage == secondBestResult.VotePercentage;
@@ -55,7 +62,10 @@ namespace VoteLibrairy
             }
             else if (Round == VoteRound.First)
             {
-                Candidates[VoteRound.Second] = orderedResults.Take(2).Select(r => r.CandidateName).ToList();
+                Candidates[VoteRound.Second] = orderedResults
+                    .Take(2)
+                    .Select(r => candidatesByName[r.CandidateName])
+                    .ToList();
                 State = VoteState.InComing;
                 Round = VoteRound.Second;
                 return null;
@@ -64,7 +74,7 @@ namespace VoteLibrairy
             return null;
         }
 
-        public void AddCandidate(string candidate)
+        public void AddCandidate(Candidate candidate)
         {
             if (State != VoteState.InComing)
             {
@@ -78,15 +88,15 @@ namespace VoteLibrairy
 
             if (Candidates[Round].Contains(candidate))
             {
-                throw new Exception($"Unable to add '{candidate}', duplicated.");
+                throw new Exception($"Unable to add '{candidate.Name}', duplicated.");
             }
 
             Candidates[Round].Add(candidate);
         }
 
-        public void AddCandidates(List<string> candidates)
+        public void AddCandidates(List<Candidate> candidates)
         {
-            foreach (string candidate in candidates)
+            foreach (Candidate candidate in candidates)
             {
                 AddCandidate(candidate);
             }
@@ -114,6 +124,16 @@ namespace VoteLibrairy
             TotalVotes[Round] += voteNumber;
         }
 
+        public void AddBlankVotes(uint voteNumber)
+        {
+            if (State != VoteState.Opened)
+            {
+                throw new Exception($"Unable to add blank vote, the vote is '{State.ToString()}'.");
+            }
+
+            BlankVotes[Round] += voteNumber;
+        }
+
         public void StartVote()
         {
             if (State != VoteState.InComing)
@@ -127,9 +147,10 @@ namespace VoteLibrairy
 
             State = VoteState.Opened;
             TotalVotes[Round] = 0;
+            BlankVotes[Round] = 0;
             
             // Add the default value for results (voteNumber & votePercentage to 0)
-            Results[Round] = Candidates[Round].Select(c => new ResultRecord(c)).ToList();
+            Results[Round] = Candidates[Round].Select(c => new ResultRecord(c.Name)).ToList();
         }
 
         public void CloseVote()

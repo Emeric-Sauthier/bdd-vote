@@ -17,9 +17,10 @@ namespace VoteLibrairy
         // Round of the vote
         public VoteRound Round { get; private set; }
 
-        // Total number of votes
+        // Total number of cast votes
         public Dictionary<VoteRound, uint> TotalVotes { get; private set; }
 
+        // Total of blank votes
         public Dictionary<VoteRound, uint> BlankVotes { get; private set; }
 
         // Result of the vote session (per round): key = Round, value = List of results

@@ -86,7 +86,7 @@ namespace VoteLibrairy
                 Candidates[Round] = new();
             }
 
-            if (Candidates[Round].Contains(candidate))
+            if (Candidates[Round].Any(c => c.Name == candidate.Name))
             {
                 throw new Exception($"Unable to add '{candidate.Name}', duplicated.");
             }

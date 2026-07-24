@@ -11,7 +11,6 @@ namespace VoteLibrairy
         public string Description { get; private set; }
 
         // Candidates of the vote session (per round): key = Round, value = List of candidates
-
         public Dictionary<VoteRound, List<Candidate>> Candidates { get; private set; }
 
         // Round of the vote
